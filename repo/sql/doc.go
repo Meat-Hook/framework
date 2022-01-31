@@ -1,2 +1,2 @@
-// Package sql contains helpers and wrappers for some sql databases.
+// Package sql contains helpers and wrapper for some sql databases.
 package sql

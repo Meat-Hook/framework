@@ -16,7 +16,6 @@ import (
 
 // Config for set additional properties.
 type Config struct {
-	Driver                string
 	ReturnErrs            []error
 	Metrics               repo.MetricCollector
 	SetConnMaxLifetime    time.Duration
@@ -26,9 +25,6 @@ type Config struct {
 }
 
 func (c Config) setDefault() Config {
-	if c.Driver == "" {
-		c.Driver = "postgres"
-	}
 	if c.Metrics == nil {
 		c.Metrics = repo.NoMetric{}
 	}
@@ -61,7 +57,7 @@ type DB struct {
 }
 
 // New build and returns new DB.
-func New(ctx context.Context, cfg Config, connector Connector) (*DB, error) {
+func New(ctx context.Context, driver string, cfg Config, connector Connector) (*DB, error) {
 	cfg = cfg.setDefault()
 
 	dsn, err := connector.DSN()
@@ -69,7 +65,7 @@ func New(ctx context.Context, cfg Config, connector Connector) (*DB, error) {
 		return nil, fmt.Errorf("connector.DSN: %w", err)
 	}
 
-	conn, err := sql.Open(cfg.Driver, dsn)
+	conn, err := sql.Open(driver, dsn)
 	if err != nil {
 		return nil, fmt.Errorf("sql.Open: %w", err)
 	}
@@ -84,7 +80,7 @@ func New(ctx context.Context, cfg Config, connector Connector) (*DB, error) {
 	}
 
 	db := &DB{
-		conn:       sqlx.NewDb(conn, cfg.Driver),
+		conn:       sqlx.NewDb(conn, driver),
 		returnErrs: cfg.ReturnErrs,
 		metrics:    cfg.Metrics,
 	}
