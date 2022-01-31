@@ -14,6 +14,13 @@ import (
 	"github.com/Meat-Hook/framework/repo"
 )
 
+const (
+	DefaultSetConnMaxLifetime    = time.Second * 10
+	DefaultSetConnMaxIdleTime    = time.Second * 10
+	DefaultSetMaxOpenConnections = 50
+	DefaultSetMaxIdleConnections = 50
+)
+
 // Config for set additional properties.
 type Config struct {
 	ReturnErrs            []error
@@ -29,16 +36,16 @@ func (c Config) setDefault() Config {
 		c.Metrics = repo.NoMetric{}
 	}
 	if c.SetConnMaxLifetime == 0 {
-		c.SetConnMaxLifetime = time.Second * 10
+		c.SetConnMaxLifetime = DefaultSetConnMaxLifetime
 	}
 	if c.SetConnMaxIdleTime == 0 {
-		c.SetConnMaxIdleTime = time.Second * 10
+		c.SetConnMaxIdleTime = DefaultSetConnMaxIdleTime
 	}
 	if c.SetMaxOpenConnections == 0 {
-		c.SetMaxOpenConnections = 50
+		c.SetMaxOpenConnections = DefaultSetMaxOpenConnections
 	}
 	if c.SetMaxIdleConnections == 0 {
-		c.SetMaxIdleConnections = 50
+		c.SetMaxIdleConnections = DefaultSetMaxIdleConnections
 	}
 	return c
 }
